@@ -40,6 +40,6 @@ public class QueueController {
 	@RequestMapping(method=RequestMethod.POST, path="/{bucketName}")
 	public void addEvent(@RequestBody String data, @PathVariable ("bucketName") String name){
 		logger.info("Attempting to add [" + data + "] to [" + name + "].");
-		rManager.addData(name, data + System.nanoTime());
+		rManager.addData(name, data );
 	}
 }
