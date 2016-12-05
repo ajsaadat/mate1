@@ -8,13 +8,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mate1.hq.core.RequestManager;
-import com.mate1.hq.core.SessionManager.QueryResult;
+import com.mate1.hq.core.IRequestManager;
+import com.mate1.hq.core.impl.RequestManager;
+import com.mate1.hq.core.impl.SessionManager.QueryResult;
 
 @RestController
 @RequestMapping("/")
 public class QueueController {
-	private RequestManager rManager = new RequestManager() ; 
+	private IRequestManager rManager = new RequestManager() ; 
 	private final Logger logger = Logger.getLogger(QueueController.class) ;
 	
 	@RequestMapping(path="/{bucketName}", method=RequestMethod.GET)

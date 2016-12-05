@@ -1,10 +1,14 @@
-package com.mate1.hq.core;
+package com.mate1.hq.core.impl;
 
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.log4j.Logger;
 
+import com.mate1.hq.core.ConsumedData;
+import com.mate1.hq.core.IHyperQueue;
+import com.mate1.hq.core.ISessionManager;
+import com.mate1.hq.core.UserData;
 import com.mate1.hq.exceptions.BucketNotFoundException;
 import com.mate1.hq.exceptions.InvalidSessionException;
 import com.mate1.hq.exceptions.ItemNotFoundInBucketException;
@@ -14,12 +18,12 @@ import com.mate1.hq.exceptions.ItemNotFoundInBucketException;
  * Through this class user can add and retrieve data from the underlying data structure. 
  * This class follows singleton design pattern. 
  */
-public class SessionManager {
+public class SessionManager implements ISessionManager {
 	private CopyOnWriteArrayList<UserData> sessionManager = new CopyOnWriteArrayList<>() ; 
-	private HyperQueue hQueue = new HyperQueue() ; 
+	private IHyperQueue hQueue = new HyperQueue() ; 
 	private final Logger logger = Logger.getLogger(SessionManager.class) ;
 	
-	private static SessionManager sManager = new SessionManager() ; 
+	private static ISessionManager sManager = new SessionManager() ; 
 	
 	private SessionManager(){
 		
@@ -31,7 +35,7 @@ public class SessionManager {
 	 *
 	 * @return single instance of SessionManager
 	 */
-	public  static SessionManager getInstance(){
+	public  static ISessionManager getInstance(){
 		if(sManager == null){
 			synchronized(SessionManager.class){
 				if(sManager == null){
@@ -43,14 +47,10 @@ public class SessionManager {
 		return sManager ; 
 	}
 	
-	/**
-	 * Adds data to the underlying {@link HyperQueue}. 
-	 * 
-	 *
-	 * @param name representing the name of the bucket which provided data should be added. 
-	 * Name can not be null or empty, if so, an {@link IllegalArgumentException} will be thrown, 
-	 * @param data that user wants to add to the provided bucket. 
+	/* (non-Javadoc)
+	 * @see com.mate1.hq.core.ISessionManager#addData(java.lang.String, java.lang.String)
 	 */
+	@Override
 	public synchronized void addData(String name, String data){
 		hQueue.addData(name, data);
 	}
@@ -130,15 +130,10 @@ public class SessionManager {
 		}
 	}
 	
-	/**
-	 * Use this method to retrieve information from datastore for returning users[users with sessionID].
-	 * @param sessionID identifies a user who has accessed the system before.
-	 * @param name of the bucket to retrieve information from.
-	 * @return a {@link QueryResult}
-	 * @throws BucketNotFoundException will be thrown if bucket name is invalid.
-	 * @throws InvalidSessionException will be thrown if the sessionID is invalid.
-	 * @throws ItemNotFoundInBucketException will be thrown if the bucket did not contain any data.
+	/* (non-Javadoc)
+	 * @see com.mate1.hq.core.ISessionManager#getData(java.lang.String, java.lang.String)
 	 */
+	@Override
 	public synchronized QueryResult getData(String sessionID, String name) throws BucketNotFoundException, 
 	InvalidSessionException, ItemNotFoundInBucketException{
 		ConsumedData cData = getConsumedData(sessionID, name) ;
@@ -149,15 +144,10 @@ public class SessionManager {
 		
 	}
 	
-	/**
-	 * Use this method to retrieve information from datastore for first time users
-	 * [users without sessionID].
-	 * @param name of the bucket to retrieve information from.
-	 * @return a {@link QueryResult}
-	 * @throws BucketNotFoundException will be thrown if bucket name is invalid.
-	 * @throws InvalidSessionException will be thrown if the sessionID is invalid.
-	 * @throws ItemNotFoundInBucketException will be thrown if the bucket did not contain any data.
+	/* (non-Javadoc)
+	 * @see com.mate1.hq.core.ISessionManager#getData(java.lang.String)
 	 */
+	@Override
 	public synchronized QueryResult getData(String name) throws BucketNotFoundException, ItemNotFoundInBucketException{
 		String sessionID = UUID.randomUUID().toString() ; 
 		int index = 0 ; 

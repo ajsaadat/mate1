@@ -6,7 +6,7 @@ package com.mate1.hq.core;
  * @author ajsaadat
  *
  */
-class ConsumedData{
+public class ConsumedData{
 	private String name ; 
 	private int index ;
 	
