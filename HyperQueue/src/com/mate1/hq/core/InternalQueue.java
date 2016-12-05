@@ -18,6 +18,9 @@ public class InternalQueue {
 	private ConcurrentLinkedQueue<String> internalQueue = new ConcurrentLinkedQueue<>() ; 
 	
 	public InternalQueue(String name){
+		if(name == null || name.isEmpty()){
+			throw new IllegalArgumentException("Queue name can not be null/empty") ;
+		}
 		this.name = name ; 
 	}
 	
