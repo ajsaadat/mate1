@@ -1,9 +1,10 @@
-package com.mate1.hq.core;
+package com.mate1.hq.core.impl;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.apache.log4j.Logger;
 
+import com.mate1.hq.core.IInternalQueue;
 import com.mate1.hq.exceptions.ItemNotFoundInBucketException;
 
 /**
@@ -12,7 +13,7 @@ import com.mate1.hq.exceptions.ItemNotFoundInBucketException;
  * @author ajsaadat
  *
  */
-public class InternalQueue {
+public class InternalQueue implements IInternalQueue {
 	private final Logger logger = Logger.getLogger(InternalQueue.class) ;
 	private String name ; 
 	private ConcurrentLinkedQueue<String> internalQueue = new ConcurrentLinkedQueue<>() ; 
@@ -24,11 +25,10 @@ public class InternalQueue {
 		this.name = name ; 
 	}
 	
-	/**
-	 * adds data to the internal structure.
-	 * @param data that user wants to add the internal structure. If null or empty
-	 * is provided method will not perform any task. 
+	/* (non-Javadoc)
+	 * @see com.mate1.hq.core.IInternalQueue#addData(java.lang.String)
 	 */
+	@Override
 	public void addData(String data){
 		if(data == null || data.isEmpty()){
 			logger.info("Nothing to add to the queue.");
@@ -40,12 +40,10 @@ public class InternalQueue {
 			return ; 
 		}
 	}
-	/**
-	 * Retrieve data from the head of the internal that structure.
-	 * @return data occupying the head of the internal data structure.
-	 * if internal data structure is empty, a string indicating that fact will be 
-	 * returned.
+	/* (non-Javadoc)
+	 * @see com.mate1.hq.core.IInternalQueue#getData()
 	 */
+	@Override
 	public String getData(){
 		if(internalQueue.isEmpty()){
 			return "nothing was found in [" + name +"] queue." ;
@@ -56,6 +54,10 @@ public class InternalQueue {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.mate1.hq.core.IInternalQueue#getData(int)
+	 */
+	@Override
 	public String getData(int index) throws ItemNotFoundInBucketException{
 		if(index >= internalQueue.size()){
 			logger.error("Provided index [" + index +  "] is not within the internal structure.");
@@ -73,6 +75,9 @@ public class InternalQueue {
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.mate1.hq.core.IInternalQueue#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

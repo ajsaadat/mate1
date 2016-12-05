@@ -2,6 +2,7 @@ package com.mate1.hq.core;
 
 import org.testng.annotations.Test;
 
+import com.mate1.hq.core.impl.HyperQueue;
 import com.mate1.hq.exceptions.BucketNotFoundException;
 import com.mate1.hq.exceptions.ItemNotFoundInBucketException;
 
